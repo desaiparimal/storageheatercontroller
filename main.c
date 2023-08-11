@@ -1,8 +1,9 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 #include<time.h>
 
-int timecalc(int minutes){
+void timecalc(int minutes){
     unsigned int x_seconds=0;
 	unsigned int x_milliseconds=0;
 	unsigned int count_down_time_in_secs=0,time_left=0;
@@ -26,7 +27,6 @@ int timecalc(int minutes){
 
 
 	printf( "\n\n\nTime's out\n\n\n");
-    return 0;
 
 }
 
@@ -38,17 +38,33 @@ int main(){
 
     printf ("\nEnter minutes for heater timer \n");
     scanf("%u",&minuets);
-    printf ("\nEnter schedule in a string below [ctrl + d] to quit\n");
+    printf ("\nEnter schedule in a string below and enter ,press [ctrl + d] to quit\n");
 
     while ((read = getline(&str, &len, stdin)) != -1) {
 
         if (read > 0)
             printf ("\n  read %zd chars from stdin, allocated %zd bytes for line : %s\n", read, len, str);
 
-        // convert first string char to int
-        if(timecalc(30))
-            //if times out read next int from string
-            
+        if(strlen(str)!=49){
+            printf("Enter 48digits only\n");
+            continue;
+        } else{
+            for (int i = 0 ;i < strlen(str)-1;i++){
+                int status = str[i] - '0';
+                //printf("status = %d \n", status);
+                if(!(status == 0 || status == 1)){
+                    printf("Enter either 0 or 1 digits only \n");
+                    continue;
+                }
+            }
+        }
+        for (int i = 0 ;i < strlen(str)-1;i++){
+            if(str[i] - '0')
+                printf("ON\n");
+            else    
+                printf("OFF\n");
+            timecalc(minuets);
+        }
         printf ("Enter string below [ctrl + d] to quit\n");
     }    
     return 0;
