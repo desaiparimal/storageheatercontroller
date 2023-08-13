@@ -14,6 +14,9 @@ struct stream_data{
 void* pollstdin (void* info)
 {
     struct stream_data *stream = (struct stream_data *)malloc(sizeof(struct stream_data));
+    if(stream == NULL)
+        pthread_exit(pthread_self());
+
     stream->string = NULL;
     stream->length = 0;
     stream->buffer_size = 0 ;
