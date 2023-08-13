@@ -3,7 +3,7 @@
 #include <time.h>
 #include <pthread.h>
 
-int mRunning = 0;
+int tRunning = 0;
 
 struct stream_data{
   ssize_t length;
@@ -33,7 +33,7 @@ void* pollstdin (void* info)
                 }
             }
         }
-        mRunning = 1;
+        tRunning = 1;
         return (void*) stream;
     }
     return (void *)stream;
@@ -48,8 +48,8 @@ void *timer(void *vargp)
 	unsigned int x_milliseconds=0;
 	unsigned int count_down_time_in_secs=0,time_left=0;
 	clock_t x_startTime,x_countTime;
-	count_down_time_in_secs=5;  // 1 minute is 60, 1 hour is 3600
-    mRunning = 0 ;
+	count_down_time_in_secs=1800;  // 1 minute is 60, 1 hour is 3600
+    tRunning = 0 ;
     for (int i = 0 ; i < new->length - 1 ; i++ ){
         x_seconds=0 ; 
         if(new->string[i] - '0')
@@ -60,13 +60,13 @@ void *timer(void *vargp)
         x_startTime=clock();  // start clock
         time_left=count_down_time_in_secs-x_seconds;   // update timer
 
-        while (time_left > 0 && !mRunning) {
+        while (time_left > 0 && !tRunning) {
             x_countTime=clock(); // update timer difference
             x_milliseconds=x_countTime-x_startTime;
             x_seconds=(x_milliseconds/(CLOCKS_PER_SEC));
 
             time_left=count_down_time_in_secs-x_seconds; // subtract to get difference 
-            if(mRunning == 1)
+            if(tRunning == 1)
                 pthread_exit(pthread_self());
 
         }
@@ -91,8 +91,7 @@ int main(){
         pthread_join(thread_id1, (void **)&new);
 
         if(new ==  NULL || new->length == -1){
-            pthread_exit(pthread_self()); // pressed ctrl+d
-            mRunning = 1; //stopping the timer thread
+            tRunning = 1; //stopping the timer thread
             return 0;
         }
 
